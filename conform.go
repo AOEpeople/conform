@@ -172,7 +172,8 @@ func onlyOne(s string, m []x) string {
 
 func formatName(s string) string {
 	first := onlyOne(strings.ToLower(s), []x{
-		{"[^\\pL-\\s']": ""}, // cut off everything except [ alpha, hyphen, whitespace, apostrophe]
+		{"[^\\pL-\\s'\\.]": ""}, // cut off everything except [ alpha, hyphen, whitespace, apostrophe, dot]
+		{"\\.": " "}, // make dot to whitespace
 		{"\\s{2,}": " "}, // trim more than two whitespaces to one
 		{"-{2,}": "-"}, // trim more than two hyphens to one
 		{"'{2,}": "'"}, // trim more than two apostrophes to one

@@ -456,6 +456,7 @@ func (t *testSuite) TestWeirdNames() {
 		"%s'%s%s-%s%s''%s", // name with apostrophes
 		"%s     %s%s-%s%s%s", // multiple whitespaces
 		"%s%s%s  -  %s%s%s", // name with whitespace enclosed hyphen
+		".%s%s.%s-%s.%s%s.", // name with dots (false input?!)
 	}
 
 F:
