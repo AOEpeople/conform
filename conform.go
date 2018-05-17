@@ -175,12 +175,12 @@ func onlyOne(s string, m []x) string {
 
 func formatName(s string) string {
 	first := onlyOne(strings.ToLower(s), []x{
-		{"[^\\pL-\\s'\\.]": ""}, // cut off everything except [ alpha, hyphen, whitespace, apostrophe, dot]
-		{"\\.": " "}, // make dot to whitespace
-		{"\\s{2,}": " "}, // trim more than two whitespaces to one
-		{"-{2,}": "-"}, // trim more than two hyphens to one
-		{"'{2,}": "'"}, // trim more than two apostrophes to one
-		{"( )*-( )*": "-"}, // trim enclosing whitespaces around hyphen
+		{"[^\\pL-\\s']": ""}, // cut off everything except [ alpha, hyphen, whitespace, apostrophe]
+		{"\\.": " "},         // make dot to whitespace
+		{"\\s{2,}": " "},     // trim more than two whitespaces to one
+		{"-{2,}": "-"},       // trim more than two hyphens to one
+		{"'{2,}": "'"},       // trim more than two apostrophes to one
+		{"( )*-( )*": "-"},   // trim enclosing whitespaces around hyphen
 	})
 	return strings.Title(patterns["name"].FindString(first))
 }
@@ -192,6 +192,9 @@ func Strings(iface interface{}) error {
 		return errors.New("Not a pointer")
 	}
 	ift := reflect.Indirect(ifv).Type()
+	if ift.Kind() != reflect.Struct {
+		return nil
+	}
 	for i := 0; i < ift.NumField(); i++ {
 		v := ift.Field(i)
 		el := reflect.Indirect(ifv.Elem().FieldByName(v.Name))
