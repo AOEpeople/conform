@@ -42,8 +42,11 @@ func emailDomainPart(s string) string {
 }
 
 func email(s string) string {
-	// According to rfc5321, "The local-part of a mailbox MUST BE treated as case sensitive"
-	return emailLocalPart(s) + "@" + strings.ToLower(emailDomainPart(s))
+	if (strings.TrimSpace(emailLocalPart(s)) != "" || strings.TrimSpace(emailDomainPart(s)) != "") {
+		// According to rfc5321, "The local-part of a mailbox MUST BE treated as case sensitive"
+		return emailLocalPart(s) + "@" + strings.ToLower(emailDomainPart(s))
+	}
+	return ""
 }
 
 func camelTo(s, sep string) string {
