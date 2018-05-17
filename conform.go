@@ -22,15 +22,16 @@ var patterns = map[string]*regexp.Regexp{
 	"alpha":      regexp.MustCompile("[\\pL]"),
 	"nonAlpha":   regexp.MustCompile("[^\\pL]"),
 	"name":       regexp.MustCompile("[\\p{L}]([\\p{L}|[:space:]|\\-|\\']*[\\p{L}])*"),
+	"whitespace": regexp.MustCompile("(\\s)*"),
 }
 
 // a valid email will only have one "@", but let's treat the last "@" as the domain part separator
 func emailLocalPart(s string) string {
 	i := strings.LastIndex(s, "@")
 	if i == -1 {
-		return s
+		return noWhitespaces(s)
 	}
-	return s[0:i]
+	return noWhitespaces(s[0:i])
 }
 
 func emailDomainPart(s string) string {
@@ -38,11 +39,11 @@ func emailDomainPart(s string) string {
 	if i == -1 {
 		return ""
 	}
-	return s[i+1:]
+	return noWhitespaces(strings.ToLower(s[i+1:]))
 }
 
 func email(s string) string {
-	if (strings.TrimSpace(emailLocalPart(s)) != "" || strings.TrimSpace(emailDomainPart(s)) != "") {
+	if (emailLocalPart(s) != "" || emailDomainPart(s) != "") {
 		// According to rfc5321, "The local-part of a mailbox MUST BE treated as case sensitive"
 		return emailLocalPart(s) + "@" + strings.ToLower(emailDomainPart(s))
 	}
@@ -146,6 +147,10 @@ func ucFirst(s string) string {
 	buf.WriteRune(unicode.ToUpper(toRune))
 	buf.WriteString(s[size:])
 	return buf.String()
+}
+
+func noWhitespaces(s string) string {
+	return patterns["whitespace"].ReplaceAllLiteralString(s, "")
 }
 
 func onlyNumbers(s string) string {

@@ -192,7 +192,12 @@ Trims, strips numbers and special characters (except dashes and spaces separatin
 
 ### email
 ---------------------------------------
-Trims and lowercases the string.  Example: `"UNSIGHTLY-EMAIL@EXamPLE.com "` -> `"unsightly-email@example.com"`
+Emails are handled according to RFC5321.
+
+e.g. `[NAME]@[DOMAIN].[TLD]`
+
+The `[NAME]`-part is returned case-sensitive whereas the part `[DOMAIN].[TLD]` is transformed to lowercase.
+Whitespaces are stripped from the string. Example: `"  Un  Sightly-Email@EXamPLE.com "` -> `"UnSightly-Email@example.com"`
 
 ### num
 ---------------------------------------

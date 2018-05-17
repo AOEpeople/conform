@@ -550,11 +550,21 @@ func (t *testSuite) TestThriceEmbeddedStructFn() {
 	s.Country = country
 	Strings(&s)
 
+	fmt.Println(emailDomainPart(email))
+	fmt.Println(emailDomainPart(s.Email))
+
 	assert.Equal(fn, s.FirstName, "First name should be stripped of numbers")
 	assert.Equal(ln, s.LastName, "Last name should be stripped of numbers")
 	assert.Equal(emailLocalPart(email), emailLocalPart(s.Email), "E-mail local part should not change")
-	assert.Equal(strings.ToLower(emailDomainPart(email)), emailDomainPart(s.Email), "E-mail domain part should be lowercase")
+	assert.Equal(emailDomainPart(email), emailDomainPart(s.Email), "E-mail domain part should be lowercase")
 	assert.Equal(s.Country, "UNITED KINGDOM", "Last name should be stripped of numbers")
+
+	// additional email check
+	// email to be sanitized to "John1Doe@testdomain.tld"
+	s.Email = `  John1 Doe @ TeStDo	MaIn.	TLD    `
+	assert.Equal("John1Doe", emailLocalPart(s.Email), "E-mail local part should not change and be returned case-sensitive, all whitespaces stripped")
+	assert.Equal("testdomain.tld", emailDomainPart(s.Email),"E-mail domain part should be lowercase, all whitespaces stripped")
+
 }
 
 func (t *testSuite) TestSlice() {
